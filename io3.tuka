@@ -1,0 +1,303 @@
+set void = "void";
+set nil = "<nil>";
+
+fn min(...nums) {
+    if (nums.len == 0) {
+        return void;
+    }
+    set m = nums[0];
+    for v in nums {
+        if (v < m) {
+            m = v;
+        }
+    }
+    return m;
+}
+
+fn max(...nums) {
+    if (nums.len == 0) {
+        return void;
+    }
+    set m = nums[0];
+    for v in nums {
+        if (v > m) {
+            m = v;
+        }
+    }
+    return m;
+}
+//puts max();
+
+file.write("test.txt", "");
+set lin = file.read("test.txt");
+set x = lin.split("\n");
+set i = 0;
+set a = 0;
+
+set addlist = lambda(a,b) {
+    file.write("test.txt", a.string +"\n"+ b.string);
+    lin = file.read("test.txt");
+    x = lin.split("\n");
+    file.delete("test.txt");
+
+    loop (i<x.len+1) {
+        i = i + 1;
+        set a = x.string.replace("]","");
+        set a = a.string.replace("[","");
+        set a = a.string.replace("   ","");
+        set a = a.string.split(" ");
+    }
+    
+    return a;
+};
+
+//set c = [1,2,3];
+//set c = addlist(c,[23,4345,36]);
+//puts c;
+
+//set aaa = {"key": "value", "name": "Alice"};
+//puts aaa["key"];
+
+set file2 = "11";
+set fileadd = lambda(file1,txt) {
+    file2 = file.read(file1);
+    file2 = file2 + txt;
+    file.write(file1,file2);
+    
+    return "";
+};
+
+puts fileadd("use.txt","1");
+
+
+fn del(list1,index) {
+    set l1 = list1[0:index];
+    index = index + 1;
+    set l2 = list1[index:];
+    set l1 = addlist(l1,l2);
+    return l1;
+}
+
+fn setlist(listc,index,index2) {
+    set l1 = listc[0:index];
+    index = index + 1;
+    set l2 = listc[index:];
+    set l1 = addlist(l1,index2);
+    set l1 = addlist(l1,l2);
+    return l1;
+}
+
+//set c = ["a","b","c","d","e","f","a","b","c","d","e","f"];
+//puts del(c,4);
+//set c = setlist(c,4,555);
+//puts c; 
+
+fn formax(a,b) {
+    //file.write("test.txt", "");
+    set aa = a.split("");
+    if (aa.len < b) {
+        set x = a.float;
+    } else {
+        set i = 0;
+        for..in i b+2 {
+            file.append("test.txt", aa[i]);
+            i = i + 1;
+        }
+        set lin = file.read("test.txt");
+        set x = lin.float;
+    }
+    return x;
+}
+
+set pi = "3.1415926";
+//puts formax(pi,3);
+
+
+fn sum(...nums) {
+    set total = 0;
+    for v in nums {
+        total = total + v;
+    }
+    return total;
+}
+
+fn avg(...nums) {
+    set total = 0;
+    set count = 0;
+    for v in nums {
+        total = total + v;
+        count = count + 1;
+    }
+    if (count == 0) {
+        return void;
+    }
+    return total / count;
+}
+
+//puts avg(1,3,4324,2342);
+//set a, b, c, d, e = 0, 0, 0, 0, 0;
+//puts a, b, c, d, e;
+
+// 列表是否包含某值
+fn isinlist(list1, value) {
+    for v in list1 {
+        if (v == value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//puts isinlist([1,2,3,4,5],3);
+
+// 查找元素下标，找不到返回 -1
+fn indexof(list1, value) {
+    set i = 0;
+    for v in list1 {
+        if (v == value) {
+            return i;
+        }
+        i = i + 1;
+    }
+    return -1;
+}
+
+//puts indexof([1,2,3,4,5],3);
+
+// 计数：某值出现了几次
+fn countof(list1, value) {
+    set c = 0;
+    for v in list1 {
+        if (v == value) {
+            c = c + 1;
+        }
+    }
+    return c;
+}
+
+//puts countof([1,2,3,4,5,3],3);
+
+// 拼接列表为字符串
+fn join(list1, sep) {
+    set result = "";
+    set first = true;
+    for v in list1 {
+        if (first) {
+            result = result + v.string;
+            first = false;
+        } else {
+            result = result + sep + v.string;
+        }
+    }
+    return result;
+}
+
+//puts join([1,2,3,4,5],".");
+
+// 绝对值
+fn abs(x) {
+    if (x < 0) {
+        return 0 - x;
+    }
+    return x;
+}
+
+//puts abs(-10);
+
+fn trim(s) {
+    set x = s.replace(" ", "").string;   // 注意：这个语言没有 trim，只能简化成去空格
+    return x;
+}
+
+//puts trim("  123  ");
+
+// 重复字符串 n 次
+fn repeatstring(s, n) {
+    set result = "";
+    for..in i n {
+        result = result + s;
+    }
+    return result;
+}
+
+//puts repeatstring("hello",3);
+
+// 左填充：padleft("5", "0", 3) → "005"
+fn padleft(s, pad, total) {
+    set result = s;
+    loop (result.split("").len < total) {
+        result = pad + result;
+    }
+    return result;
+}
+
+// 右填充：padright("5", "0", 3) → "500"
+fn padright(s, pad, total) {
+    set result = s;
+    loop (result.split("").len < total) {
+        result = result + pad;
+    }
+    return result;
+}
+
+//puts padleft("5", "0", 3);
+//puts padright("5", "0", 3);
+
+// 判断变量是否是空值
+fn isVoid(x) {
+    return x == void;
+}
+
+//puts isVoid(1);
+//puts isVoid(void);
+
+
+// 随机选列表一个元素
+fn choice(list1) {
+    if (list1.len == 0) {
+        return void;
+    }
+    return list1[rand(0, list1.len - 1)];
+}
+
+//puts choice([1,2,3,4,5]);
+
+
+//排序 第一参数为列表，第二参数为是否降序，默认升序
+fn sort(arr, reverse = false) {
+    set n = arr.len;
+    for..in i n {
+        set j = i + 1;
+        loop (j < n) {
+            set need = false;
+            if (reverse) {
+                if (arr[j] > arr[i]) { need = true; }
+            } else {
+                if (arr[j] < arr[i]) { need = true; }
+            }
+            if (need) {
+                set t = arr[i];
+                arr[i] = arr[j];
+                arr[j] = t;
+            }
+            j = j + 1;
+        }
+    }
+    return arr;
+}
+
+set a = [3, 1, 4, 1, 5, 9, 2, 6];
+//puts sort(a);              // 输出：[1, 1, 2, 3, 4, 5, 6, 9]
+//puts sort(a, true);        // 降序：[9, 6, 5, 4, 3, 2, 1, 1]
+
+//列表反转
+fn reverse2(arr) {
+    set n = arr.len;
+    for..in i (n / 2).int {
+        set t = arr[i];
+        arr[i] = arr[n - 1 - i];
+        arr[n - 1 - i] = t;
+    }
+    return arr;
+}
+//puts reverse2(a);

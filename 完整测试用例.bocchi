@@ -1,0 +1,386 @@
+// 测试取整功能
+clear;
+title("Hi");
+
+set a = 3.14159265;
+puts "原始值:", a;
+puts "向下取整:", floor(a);    // 输出 3
+puts "向上取整:", ceil(a);     // 输出 4  
+puts "四舍五入:", round(a);    // 输出 3
+
+set b = 2.71828;
+puts "b 原始值:", b;
+puts "b 向下取整:", floor(b);  // 输出 2
+puts "b 向上取整:", ceil(b);   // 输出 3
+puts "b 四舍五入:", round(b);  // 输出 3
+
+set c = 5.6;
+puts "c 四舍五入:", round(c);  // 输出 6
+
+// 也可以在表达式中使用
+set result = round(3.14159 * 10) / 10;
+puts "保留一位小数:", result;  // 输出 3.1
+
+// 不换行输出
+putsf "Loading: ";
+putsf "50%";
+
+// 重写输出（用于进度条等）
+putsr "Progress: [===      ] 30%";
+time.sleep(0.5);
+putsr "Progress: [======   ] 60%";
+time.sleep(0.5);
+putsr "Progress: [=========] 100%";
+puts ""; // 最后换行
+
+// 支持嵌入变量
+set name = "Bocchi";
+putsf "Hello, ";
+putsf name;
+puts "!"; // 最后换行
+
+type bool c = a != b;
+puts c;
+
+// 使用快速列表生成器语法
+
+putsf range(5);          // [0,1,2,3,4]
+putsf range(1, 6);       // [1,2,3,4,5]
+putsf range(0, 10, 2);   // [0,2,4,6,8]
+putsf repeat("hi", 3); // ["hi", "hi", "hi"]
+
+// 传统列表字面量（修复后的）
+putsf [1, 2, 3];          // 正常
+putsf [];                 // 空列表
+putsf [1, 2, 3,];         // 支持尾随逗号
+puts;
+//2027.4
+
+//puts os.admin_cmd("ping 180.76.76.76");
+
+
+
+
+//2028.1
+// 默认参数示例
+fn greet(name, greeting = "Hello") {
+    return greeting + ", " + name + "!";
+}
+
+puts greet("Alice");           // 输出: Hello, Alice!
+puts greet("Bob"+"Hi");       // 输出: Hi, Bob!
+
+fn sum(...numbers) {
+    set total = 0;
+    for n in numbers {
+        total = total + n;
+    }
+    return total;
+}
+
+puts sum(1, 2, 3);        // 输出: 6
+puts sum(1, 2, 3, 4, 5);  // 输出: 15
+
+fn calculate(operation, ...values) {
+    if (operation == "add") {
+        set result = 0;
+        for v in values {
+            result = result + v;
+        }
+        return result;
+    } else if (operation == "multiply") {
+        set result = 1;
+        for v in values {
+            result = result * v;
+        }
+        return result;
+    }
+}
+
+puts calculate("add", 1, 2, 3);        // 输出: 6
+puts calculate("multiply", 2, 3, 4);   // 输出: 24
+puts calculate(2, 3, 4);               // 使用默认operation "add", 输出: 9
+
+
+
+//2028.2
+for..in i 5 {
+    puts i;  // 输出 0, 1, 2, 3, 4
+}
+
+// 也可以使用变量
+set n = 3;
+for..in j n {
+    puts j;  // 输出 0, 1, 2
+}
+
+// 嵌套循环
+for..in i 2 {
+    for..in j 3 {
+        puts "i:", i, "j:", j;
+    }
+}
+// 输出:
+// i: 0 j: 0
+// i: 0 j: 1  
+// i: 0 j: 2
+// i: 1 j: 0
+// i: 1 j: 1
+// i: 1 j: 2
+
+for..in i 5 {
+    puts "Hi";
+}
+
+//2028.3
+// 鼠标控制示例
+
+time.sleep(1);
+//mouse.move(500, 300);
+//mouse.click();                    // 左键点击
+//mouse.click(right);               // 右键点击
+mouse.scroll(5);                  // 向上滚动
+
+// 获取鼠标位置
+set pos = mouse.getPos();
+puts "鼠标位置:", pos;
+
+// 键盘控制示例  
+//keyboard.press("a");              // 按下a键
+//keyboard.release("a");            // 释放a键
+
+// 组合操作 - 模拟快捷键
+//keyboard.press("ctrl");
+//keyboard.press("v");
+//keyboard.release("v");
+//keyboard.release("ctrl");
+
+
+//keyboard.type("password");//以复制的方式输入文本
+
+
+// 示例：并发计算斐波那契数列并使用 ok() 共享结果
+
+fn fib(n) {
+    if (n <= 1) {
+        return n;
+    }
+    set x = fib(n-1) + fib(n-2);
+    return x;
+}
+
+static int result1 = 1;
+
+// 使用 go{} 和 ok() 并发计算多个斐波那契数
+go {
+    result1 = fib(35);
+    ok(global_result1) = result1;  // 使用 ok() 将结果设置到全局环境
+    puts "goroutine 1 完成: fib(35) = ", result1;
+}
+
+time.sleep(1);
+puts "fib(35) = ", global_result1;
+
+result1 = 1;
+go {
+    for..in i 1000{
+        result1 = result1 + 1;
+    }
+    puts result1;
+    ok(aa2) = result1;
+}
+wait_all;
+puts "jieguo:" , aa2 , result1;
+
+
+
+set result12 = 0;
+go {
+    for..in i 1000{
+        result12 = result12 + 1;
+    }
+    ok(result12) = result12;
+}
+wait_all;
+puts result12;
+
+
+set ccc = [1,2,3,4,56];
+for i in ccc {
+    putsf i;
+}
+
+
+//2029.1
+
+screenshot("screenshot.png");
+
+//image_click("image.png") confidence=0.2;
+
+//image_wait("image.png") time.sleep(1);
+
+// 检查错误消息是否存在
+//if (image_exists("screenshot.png")) {
+//    puts "发现错误消息！";
+//}
+
+fn add1(a, b) {
+    return a + b;
+}
+
+fn multiply(a, b) {
+    return a * b;
+}
+
+// 定义测试
+test "测试加法函数" {
+    assert(add1(2, 3) == 5, "2 + 3 应该等于 5");
+    assert(add1(-1, 1) == 0, "-1 + 1 应该等于 0");
+    assert(add1(0, 0) == 0, "0 + 0 应该等于 0");
+}
+
+// 手动运行测试
+runTests;//不写的话就合并测试
+
+// 继续主程序逻辑
+puts "主程序继续执行...";
+
+test "测试乘法函数" {
+    assert(multiply(2, 3) == 6, "2 * 3 应该等于 6");
+    assert(multiply(-1, 5) == -5, "-1 * 5 应该等于 -5");
+    assert(multiply(0, 10) == 0, "0 * 10 应该等于 0");
+}
+
+if (os.argc > 0) {
+    puts "有" , os.argc , "个参数";
+    puts os.args;
+} else {
+    puts "没有参数";
+}
+
+//clear;
+
+//titlef支持全类型，title只支持字符串
+//title("Hi");
+
+keyboard.record(5, "test_keys.txt");
+//time.sleep(6);
+//puts file.read("test_keys.txt");
+
+
+//2029.6
+
+obj aa{
+	let name = "a";
+    let name2 = "a2";
+}
+set x = aa$name;
+puts x;//输出a
+puts aa$name2;
+
+obj ab{
+	let name = "bbb";
+    //let x = 0;
+    fn abs(a,b) {
+        return a + b;
+    }
+    fn nn(){
+        return this$name;
+    }
+}
+puts ab$abs(35,1), ab$name;
+puts ab$nn();
+
+
+obj Calculator {
+    fn fib_rec1(n) {
+        if (n <= 1) {
+            return n;
+        }
+        set x = this$fib_rec1(n-1) + this$fib_rec1(n-2);
+        return x;
+    }
+}
+//puts Calculator$fib_rec1(30);
+set xc = Calculator;
+puts xc$fib_rec1(2);
+
+
+obj Animal {
+    let name = "动物";
+    let age = 0;
+    
+    fn speak() {
+        puts this$name + " 发出声音";
+    }
+    
+    fn getAge() {
+        return this$age;
+    }
+}
+
+// 定义子类，继承父类
+obj Dog ? Animal {
+    let breed = "未知品种";
+    let age = 1;
+    
+    // 覆盖父类方法
+    fn speak() {
+        puts "汪汪！我是" + this$name + "，品种是" + this$breed;
+    }
+    
+    fn wagTail() {
+        puts this$name + " 摇尾巴";
+    }
+}
+
+// 创建对象
+set myDog = Dog;
+puts myDog$name;  // 输出：动物（继承自父类）
+puts myDog$breed; // 输出：未知品种
+
+//只继承父类的fn方法，不继承let变量
+puts myDog$getAge(); // 输出：0（继承自父类）
+
+//set a = input(" ");
+
+//4.1
+
+obj main{
+    fn main(){
+        return "111";
+    }
+}
+
+//puts main$main();
+
+
+memory.write("aaa", 1);
+memory.add("aaa", 2);
+//puts memory.size(), memory.read("aaa");
+
+memory.write("bbb", 1);
+puts memory.size(), memory.read("aaa")+memory.read("bbb");
+
+memory.write("greeting", "Hello");
+memory.append("greeting", ", Bocchi");      // 字符串拼接
+puts memory.getString("greeting");          // → Hello, Bocchi
+
+memory.write("greeting", "100");              // 覆盖为数字
+puts memory.getString("greeting", "N/A");   // → 100（自动转字符串）第 2 个参数 "N/A"：可选的默认值。只在 key 不存在时才会用到它。
+//如果值不是字符串（比如数字、列表），用 fmt.Sprint 转成字符串返回。
+//没查到 → 返回第二个参数 "N/A"；如果连第二个参数都没给，就返回空字符串 ""
+
+memory.writeString("log", "Start");
+memory.append("log", " - OK");              // 强制字符串追加
+puts memory.getString("log");               // → Start - OK
+
+memory.write("arr", [1, 2]);
+memory.append("arr", 3);                    // 列表追加
+memory.append("arr", [4, 5]);               // 列表合并
+puts memory.getString("arr");               // → [1 2 3 4 5]
+
+
+memory.delete("greeting");     // 删掉一个键
+set v = memory.read("greeting");
+memory.clear();
